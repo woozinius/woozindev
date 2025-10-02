@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로필 카드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card {
+            background: white;
+            width: 350px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: rotate(360deg);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .job-title {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .description {
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        /* 알림 메시지 스타일 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="profile-image" id="profileImage">
+            👤
+        </div>
+        <h2 id="userName">홍길동</h2>
+        <p class="job-title">프론트엔드 개발자</p>
+        <p class="description">
+            자바스크립트를 사랑하는 개발자입니다. 
+            사용자 경험을 최우선으로 생각합니다.
+        </p>
+        
+        <div class="button-group">
+            <button class="btn-primary" id="followBtn">팔로우</button>
+            <button class="btn-secondary" id="messageBtn">메시지</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="followers">1,234</span>
+                <span class="stat-label">팔로워</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">89</span>
+                <span class="stat-label">게시물</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">456</span>
+                <span class="stat-label">팔로잉</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // DOM 요소 선택하기
+        const followBtn = document.getElementById('followBtn');
+        const messageBtn = document.getElementById('messageBtn');
+        const profileImage = document.getElementById('profileImage');
+        const notification = document.getElementById('notification');
+        const followersCount = document.getElementById('followers');
+
+        // 팔로우 상태 관리
+        let isFollowing = false;
+        let currentFollowers = 1234;
+
+        // 알림 메시지 표시 함수
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            // 3초 후 알림 숨기기
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // 팔로우 버튼 클릭 이벤트
+        followBtn.addEventListener('click', function() {
+            if (isFollowing) {
+                // 언팔로우
+                followBtn.textContent = '팔로우';
+                followBtn.classList.remove('btn-secondary');
+                followBtn.classList.add('btn-primary');
+                currentFollowers--;
+                showNotification('언팔로우 했습니다');
+            } else {
+                // 팔로우
+                followBtn.textContent = '팔로잉';
+                followBtn.classList.remove('btn-primary');
+                followBtn.classList.add('btn-secondary');
+                currentFollowers++;
+                showNotification('팔로우 했습니다! 🎉');
+            }
+            
+            // 상태 업데이트
+            isFollowing = !isFollowing;
+            followersCount.textContent = currentFollowers.toLocaleString();
+        });
+
+        // 메시지 버튼 클릭 이벤트
+        messageBtn.addEventListener('click', function() {
+            showNotification('메시지 기능은 준비 중입니다 💬');
+        });
+
+        // 프로필 이미지 클릭 이벤트
+        profileImage.addEventListener('click', function() {
+            const emojis = ['👤', '😊', '🎨', '💻', '🚀', '⭐', '🎵'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            profileImage.textContent = randomEmoji;
+        });
+    </script>
+</body>
+</html>
