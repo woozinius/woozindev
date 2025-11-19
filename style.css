@@ -160,6 +160,18 @@ text-decoration: none;}
   }
 }
 
+#search-input {
+  font-size: 16px; /* 🔥 시각 확대 방지 핵심 */
+}
+
+.controls-group input {
+  font-size: 16px;
+}
+
+input, select, textarea, button {
+  font-size: 16px;
+}
+
 .controls-group button {
   padding: 8px 12px;
   border-radius: 8px;
