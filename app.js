@@ -1,74 +1,136 @@
-// 1. 더미 단어 데이터
-// 실제로는 여기 대신 CSV/구글시트 데이터를 넣을 예정
-const words = [
-  {
-    grade: 1,
-    unit: "greeting",
-    unitName: "인사 / 소개",
-    wordKo: "안녕하세요",
-    meaningZh: "您好",
-    meaningRu: "Здравствуйте",
-    pos: "표현"
-  },
-  {
-    grade: 1,
-    unit: "greeting",
-    unitName: "인사 / 소개",
-    wordKo: "감사합니다",
-    meaningZh: "谢谢",
-    meaningRu: "Спасибо",
-    pos: "표현"
-  },
-  {
-    grade: 1,
-    unit: "school",
-    unitName: "학교 생활",
-    wordKo: "학교",
-    meaningZh: "学校",
-    meaningRu: "школа",
-    pos: "명사"
-  },
-  {
-    grade: 2,
-    unit: "school",
-    unitName: "학교 생활",
-    wordKo: "숙제",
-    meaningZh: "作业",
-    meaningRu: "домашнее задание",
-    pos: "명사"
-  }
-];
+// 0. 구글 시트 CSV URL
+// 웹에 게시 → CSV 형식으로 얻은 URL을 아래에 그대로 넣으시면 됩니다.
+const SHEET_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQunOubW2LxKOTkmbx5hpR--bd7ARjT49y4dTDhjtPT1etuTVpi6xTVvFYd98-p9uaeyvUfU9GVBCQB/pub?output=csv";
 
-// 2. DOM 요소 가져오기
+// 단어 데이터: 처음에는 비어 있고, 나중에 시트에서 채워짐
+let words = [];
+
+// DOM 요소 가져오기
 const gradeSelect = document.getElementById("grade-select");
 const unitSelect = document.getElementById("unit-select");
 const searchInput = document.getElementById("search-input");
 const wordListEl = document.getElementById("word-list");
 
-// 3. 현재 선택 상태
-let currentGrade = Number(gradeSelect.value);
-let currentUnit = unitSelect.value;
+// 현재 선택 상태
+// grade: "all" 또는 "1" / "2" / "3" (문자열 그대로 유지)
+let currentGrade = gradeSelect.value || "all";
+// unit: "all" 또는 unit 코드 (greeting, school 등)
+let currentUnit = unitSelect.value || "all";
 let currentSearch = "";
 
-// 4. 단어 리스트 렌더링 함수
-function renderWordList() {
-  // 필터링: 학년, 단원, 검색어
-  const filtered = words.filter((item) => {
-    const matchGrade = item.grade === currentGrade;
-    const matchUnit = item.unit === currentUnit;
+/**
+ * CSV 텍스트를 words 배열로 변환
+ * 시트 컬럼 순서:
+ * grade,unit,unitName,wordKo,meaningZh,meaningRu,pos
+ */
+function parseCsvToWords(csvText) {
+  const lines = csvText.trim().split("\n");
+  if (lines.length <= 1) return [];
 
+  // 첫 줄은 헤더, 나머지가 데이터
+  const dataLines = lines.slice(1);
+
+  const result = dataLines
+    .map((line) => line.trim())
+    .filter((line) => line !== "")
+    .map((line) => {
+      const cols = line.split(",");
+
+      return {
+        grade: Number(cols[0]),
+        unit: cols[1],
+        unitName: cols[2],
+        wordKo: cols[3],
+        meaningZh: cols[4],
+        meaningRu: cols[5],
+        pos: cols[6],
+      };
+    });
+
+  return result;
+}
+
+/**
+ * 특정 학년에 대해 사용 가능한 단원 목록을 추출
+ * 반환 형식: [{ value: "greeting", label: "인사 / 소개" }, ...]
+ */
+function getUnitsForGrade(gradeNumber) {
+  const map = new Map();
+
+  words.forEach((item) => {
+    if (item.grade === gradeNumber) {
+      if (!map.has(item.unit)) {
+        map.set(item.unit, item.unitName || item.unit);
+      }
+    }
+  });
+
+  return Array.from(map.entries()).map(([value, label]) => ({ value, label }));
+}
+
+/**
+ * 학년(currentGrade)에 맞게 단원 셀렉트를 다시 채우기
+ * - 학년 전체일 때: 단원도 "전체"만
+ * - 특정 학년일 때: "전체" + 해당 학년의 각 단원
+ */
+function populateUnitSelect() {
+  unitSelect.innerHTML = "";
+
+  // 항상 맨 위에 "전체" 옵션 추가
+  const allOpt = document.createElement("option");
+  allOpt.value = "all";
+  allOpt.textContent = "전체";
+  unitSelect.appendChild(allOpt);
+
+  // 학년이 "전체"이면 단원도 전체만 유지
+  if (currentGrade === "all") {
+    currentUnit = "all";
+    unitSelect.value = "all";
+    return;
+  }
+
+  // 특정 학년일 때만 단원 목록 추가
+  const gradeNumber = Number(currentGrade);
+  const units = getUnitsForGrade(gradeNumber);
+
+  units.forEach((u) => {
+    const opt = document.createElement("option");
+    opt.value = u.value;
+    opt.textContent = u.label;
+    unitSelect.appendChild(opt);
+  });
+
+  // 단원 기본값은 "전체"
+  currentUnit = "all";
+  unitSelect.value = "all";
+}
+
+/**
+ * 단어 리스트를 화면에 렌더링
+ * currentGrade, currentUnit, currentSearch를 기준으로 필터링
+ */
+function renderWordList() {
+  const filtered = words.filter((item) => {
+    // 학년 필터: "전체"면 모두 허용, 아니면 해당 학년만
+    const matchGrade =
+      currentGrade === "all" || item.grade === Number(currentGrade);
+
+    // 단원 필터: "전체"면 모두 허용, 아니면 해당 단원만
+    const matchUnit =
+      currentUnit === "all" || item.unit === currentUnit;
+
+    // 검색어 필터 (한국어 단어 기준)
     const search = currentSearch.trim().toLowerCase();
     const matchSearch =
       search === "" ||
-      item.wordKo.toLowerCase().includes(search);
+      (item.wordKo && item.wordKo.toLowerCase().includes(search));
 
     return matchGrade && matchUnit && matchSearch;
   });
 
-  // 기존 내용 비우기
   wordListEl.innerHTML = "";
 
-  // 결과가 없을 때 처리
   if (filtered.length === 0) {
     const emptyEl = document.createElement("p");
     emptyEl.textContent = "해당 조건에 맞는 단어가 없습니다.";
@@ -78,12 +140,11 @@ function renderWordList() {
     return;
   }
 
-  // 필터링된 각 단어를 카드로 만들어 추가
   filtered.forEach((item) => {
     const card = document.createElement("article");
     card.className = "word-card";
 
-    // 상단: 한국어 단어 + 품사/학년 정보
+    // 상단: 한국어 단어 + 학년/품사 정보
     const header = document.createElement("div");
     header.className = "word-card-header";
 
@@ -93,7 +154,8 @@ function renderWordList() {
 
     const metaEl = document.createElement("div");
     metaEl.className = "word-meta";
-    metaEl.textContent = `${item.grade}학년 · ${item.pos || ""}`;
+    const posText = item.pos ? ` · ${item.pos}` : "";
+    metaEl.textContent = `${item.grade}학년${posText}`;
 
     header.appendChild(wordKoEl);
     header.appendChild(metaEl);
@@ -114,9 +176,9 @@ function renderWordList() {
     // 단원명
     const unitEl = document.createElement("div");
     unitEl.className = "word-unit";
-    unitEl.textContent = `단원: ${item.unitName}`;
+    unitEl.textContent = `단원: ${item.unitName || item.unit || "-"}`;
 
-    // 카드에 조립
+    // 카드 조립
     card.appendChild(header);
     card.appendChild(translations);
     card.appendChild(unitEl);
@@ -125,14 +187,43 @@ function renderWordList() {
   });
 }
 
-// 5. 이벤트 연결: 학년/단원/검색 변경 시 상태 업데이트 + 다시 렌더링
+/**
+ * 구글 시트 CSV를 불러와 words 배열을 채운 뒤 렌더링
+ */
+async function loadWordsFromSheet() {
+  wordListEl.innerHTML = "<p>단어를 불러오는 중입니다...</p>";
+
+  try {
+    const response = await fetch(SHEET_CSV_URL);
+
+    if (!response.ok) {
+      throw new Error("시트 요청 실패: " + response.status);
+    }
+
+    const csvText = await response.text();
+    words = parseCsvToWords(csvText);
+
+    // 학년에 맞는 단원 목록 채우기 + 초기 렌더링
+    populateUnitSelect();
+    renderWordList();
+  } catch (error) {
+    console.error(error);
+    wordListEl.innerHTML =
+      "<p>단어를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</p>";
+  }
+}
+
+/**
+ * 이벤트 연결
+ */
 gradeSelect.addEventListener("change", () => {
-  currentGrade = Number(gradeSelect.value);
+  currentGrade = gradeSelect.value; // "all" 또는 "1"/"2"/"3"
+  populateUnitSelect();
   renderWordList();
 });
 
 unitSelect.addEventListener("change", () => {
-  currentUnit = unitSelect.value;
+  currentUnit = unitSelect.value; // "all" 또는 unit 코드
   renderWordList();
 });
 
@@ -141,5 +232,5 @@ searchInput.addEventListener("input", () => {
   renderWordList();
 });
 
-// 6. 초기 렌더링
-renderWordList();
+// 페이지 로드 시 시트에서 데이터 불러오기
+loadWordsFromSheet();
