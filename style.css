@@ -1,0 +1,157 @@
+/* 전체 기본 스타일 초기화에 가까운 설정 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #fafafa;
+  color: #222;
+}
+
+/* 가운데 정렬용 공통 컨테이너 */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* 헤더 영역 */
+.site-header {
+  background: linear-gradient(135deg, #4a90e2, #6ec6a8);
+  color: #fff;
+  padding: 20px 0;
+}
+
+.site-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.site-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* 메인 영역 */
+.site-main {
+  padding: 24px 0 40px;
+}
+
+/* 학년/단원/검색 컨트롤 영역 */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.controls-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  flex: 1 1 150px;
+}
+
+.controls-group label {
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.controls-group select,
+.controls-group input {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d0d0d0;
+  font-size: 14px;
+}
+
+/* 단어 리스트 섹션 */
+.section-title {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+/* 단어 카드 리스트: 반응형 그리드 */
+.word-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+/* 개별 단어 카드 */
+.word-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e5e5e5;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+}
+
+.word-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  border-color: #cfd8ff;
+}
+
+.word-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.word-ko {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.word-meta {
+  font-size: 11px;
+  color: #888;
+}
+
+.word-translations {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.word-translations div {
+  margin-bottom: 2px;
+}
+
+.word-unit {
+  font-size: 11px;
+  color: #999;
+}
+
+/* 푸터 */
+.site-footer {
+  border-top: 1px solid #e5e5e5;
+  padding: 12px 0;
+  font-size: 12px;
+  color: #777;
+}
+
+/* 작은 화면(모바일)에서의 반응형 조정 */
+@media (max-width: 600px) {
+  .site-title {
+    font-size: 20px;
+  }
+
+  .controls {
+    padding: 12px;
+  }
+
+  .word-card {
+    padding: 10px 12px;
+  }
+}

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>woozin.dev</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 8px;
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            height: 100%;
+            width: 10%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .progress-text {
+            color: white;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .lesson-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .lesson-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .lesson-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .lesson-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status.completed {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .status.in-progress {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .status.locked {
+            background: #f5f5f5;
+            color: #999;
+        }
+
+        .lesson-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .lesson-card.locked:hover {
+            transform: none;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 28px;
+            margin: 40px 0 20px;
+            padding-left: 15px;
+            border-left: 5px solid #4caf50;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .github-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: white;
+            color: #1e3c72;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .github-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>woozin.dev</h1>
+            <p class="subtitle">JavaScript Study</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text">진행률: <span id="progressPercent">10</span>% 완료</p>
+        </header>
+
+        <h2 class="section-title">📚 Phase 1: 기초 다지기</h2>
+        <div class="lessons-grid">
+
+            <a href="./00-basics/index.html" class="lesson-card">
+                <span class="lesson-number">Lesson 01</span>
+                <h3>베이직 액션</h3>
+                <p>자바스크립트 기초</p>
+                <div class="lesson-tags">
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">DOM</span>
+                </div>
+                <span class="status in-progress">진행 중</span>
+            </a>
+
+          <a href="./01-profile-card/index.html" class="lesson-card">
+                <span class="lesson-number">Lesson 01</span>
+                <h3>인터랙티브 프로필 카드</h3>
+                <p>HTML, CSS, JavaScript의 기본을 배우고 간단한 클릭 이벤트를 다룹니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">DOM</span>
+                </div>
+                <span class="status in-progress">진행 중</span>
+            </a>
+
+            <div class="lesson-card locked">
+                <span class="lesson-number">Lesson 02</span>
+                <h3>배경색 체인저</h3>
+                <p>버튼 클릭으로 랜덤 배경색을 생성하고 색상 코드를 표시합니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">이벤트</span>
+                    <span class="tag">랜덤</span>
+                    <span class="tag">색상</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+
+            <div class="lesson-card locked">
+                <span class="lesson-number">Lesson 03</span>
+                <h3>할 일(Todo) 리스트</h3>
+                <p>데이터 추가, 삭제, 체크 기능을 구현하며 배열 조작을 배웁니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">배열</span>
+                    <span class="tag">CRUD</span>
+                    <span class="tag">폼</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+
+            <div class="lesson-card locked">
+                <span class="lesson-number">Lesson 04</span>
+                <h3>간단한 계산기</h3>
+                <p>계산기 UI를 만들고 사칙연산 로직을 구현합니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">함수</span>
+                    <span class="tag">조건문</span>
+                    <span class="tag">UI</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">🎨 Phase 2: 동적 웹사이트</h2>
+        <div class="lessons-grid">
+            <div class="lesson-card locked">
+                <span class="lesson-number">Lesson 05</span>
+                <h3>이미지 슬라이더</h3>
+                <p>이미지를 넘기며 슬라이드 효과를 구현합니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">애니메이션</span>
+                    <span class="tag">타이머</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+
+            <div class="lesson-card locked">
+                <span class="lesson-number">Lesson 06</span>
+                <h3>스크롤 애니메이션</h3>
+                <p>스크롤에 따라 요소가 나타나는 효과를 만듭니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">Intersection Observer</span>
+                    <span class="tag">스크롤</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+
+            <div class="lesson-card locked">
+                <span class="lesson-number">Lesson 07</span>
+                <h3>영화 카드 갤러리</h3>
+                <p>API에서 데이터를 가져와 카드 형태로 표시합니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">Fetch API</span>
+                    <span class="tag">비동기</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+
+            <div class="lesson-card locked">
+                <span class="lesson-number">Lesson 08</span>
+                <h3>날씨 정보 앱</h3>
+                <p>날씨 API를 연동하여 실시간 날씨를 표시합니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">API</span>
+                    <span class="tag">async/await</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">🎵 Phase 3: NewJeans 클론 코딩</h2>
+        <div class="lessons-grid">
+            <div class="lesson-card locked">
+                <span class="lesson-number">Final Project</span>
+                <h3>NewJeans 사이트 클론</h3>
+                <p>지금까지 배운 모든 것을 활용하여 실제 사이트를 만듭니다.</p>
+                <div class="lesson-tags">
+                    <span class="tag">종합 프로젝트</span>
+                    <span class="tag">반응형</span>
+                    <span class="tag">배포</span>
+                </div>
+                <span class="status locked">🔒 준비 중</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>📧 Contact: your-email@example.com</p>
+            <a href="https://github.com/your-username/js-learning" class="github-link" target="_blank">
+                GitHub 저장소 보기
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        // 진행률 업데이트 함수
+        function updateProgress() {
+            const totalLessons = document.querySelectorAll('.lesson-card').length;
+            const completedLessons = document.querySelectorAll('.status.completed').length;
+            const inProgressLessons = document.querySelectorAll('.status.in-progress').length;
+            
+            // 진행 중인 레슨은 50% 계산
+            const progress = ((completedLessons + (inProgressLessons * 0.5)) / totalLessons * 100).toFixed(0);
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = progress;
+        }
+
+        // 페이지 로드 시 진행률 업데이트
+        updateProgress();
+
+        // 잠긴 카드 클릭 방지
+        document.querySelectorAll('.lesson-card.locked').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('이 레슨은 아직 준비 중입니다! 이전 레슨을 먼저 완료해주세요. 🔒');
+            });
+        });
+    </script>
+</body>
+</html>

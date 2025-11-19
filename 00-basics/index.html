@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자바스크립트 기초 - Step 0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 36px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .example {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .example code {
+            color: #e83e8c;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .result {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #2e7d32;
+            font-weight: 600;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .number-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .emoji {
+            font-size: 72px;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 자바스크립트 기초 - 완전 초보용</h1>
+
+        <!-- 실습 1: 버튼 클릭 -->
+        <div class="card">
+            <h2>📌 실습 1: 버튼 클릭하기</h2>
+            <p>버튼을 클릭하면 메시지가 나타납니다. 이게 자바스크립트의 시작이에요!</p>
+            
+            <div class="example">
+                <code>버튼 클릭 → 자바스크립트 코드 실행 → 결과 표시</code>
+            </div>
+
+            <button id="helloBtn">클릭해보세요!</button>
+            <div class="result" id="result1">여기에 결과가 나타납니다</div>
+        </div>
+
+        <!-- 실습 2: 숫자 세기 -->
+        <div class="card">
+            <h2>📌 실습 2: 숫자 세기</h2>
+            <p>버튼을 누를 때마다 숫자가 1씩 증가합니다. 변수(데이터 저장소)를 배워봅시다!</p>
+            
+            <div class="example">
+                <code>변수 = 데이터를 담는 상자</code>
+            </div>
+
+            <div class="number-display" id="counter">0</div>
+            <button id="increaseBtn">+1 증가</button>
+            <button id="decreaseBtn">-1 감소</button>
+            <button id="resetBtn">0으로 리셋</button>
+        </div>
+
+        <!-- 실습 3: 이름 입력받기 -->
+        <div class="card">
+            <h2>📌 실습 3: 이름 입력받기</h2>
+            <p>사용자가 입력한 내용을 받아서 사용할 수 있어요!</p>
+            
+            <div class="example">
+                <code>input에서 값 가져오기 → 처리 → 화면에 표시</code>
+            </div>
+
+            <input type="text" id="nameInput" placeholder="이름을 입력하세요">
+            <button id="greetBtn">인사하기</button>
+            <div class="result" id="result3">인사 메시지가 여기 나타납니다</div>
+        </div>
+
+        <!-- 실습 4: 조건문 -->
+        <div class="card">
+            <h2>📌 실습 4: 조건에 따라 다르게</h2>
+            <p>숫자를 입력하면 짝수인지 홀수인지 알려줍니다. if문을 배워봅시다!</p>
+            
+            <div class="example">
+                <code>if (조건) { 조건이 참일 때 실행 } else { 거짓일 때 실행 }</code>
+            </div>
+
+            <input type="number" id="numberInput" placeholder="숫자를 입력하세요">
+            <button id="checkBtn">확인하기</button>
+            <div class="result" id="result4">결과가 여기 나타납니다</div>
+        </div>
+
+        <!-- 실습 5: 이모지 바꾸기 -->
+        <div class="card">
+            <h2>📌 실습 5: 랜덤 이모지</h2>
+            <p>버튼을 누를 때마다 랜덤한 이모지가 나타납니다!</p>
+            
+            <div class="example">
+                <code>배열 = 여러 데이터를 담는 목록</code>
+            </div>
+
+            <div class="emoji" id="emojiDisplay">😊</div>
+            <button id="emojiBtn">이모지 바꾸기</button>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // 실습 1: 버튼 클릭하기
+        // ========================================
+        
+        // 1단계: HTML에서 버튼 찾기
+        const helloBtn = document.getElementById('helloBtn');
+        const result1 = document.getElementById('result1');
+        
+        // 2단계: 버튼이 클릭되면 실행할 함수 만들기
+        helloBtn.addEventListener('click', function() {
+            // 3단계: 실행될 코드 작성
+            result1.textContent = '👋 안녕하세요! 자바스크립트입니다!';
+        });
+
+        // ========================================
+        // 실습 2: 숫자 세기
+        // ========================================
+        
+        // 변수: 숫자를 저장하는 상자
+        let count = 0;
+        
+        const counter = document.getElementById('counter');
+        const increaseBtn = document.getElementById('increaseBtn');
+        const decreaseBtn = document.getElementById('decreaseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // 증가 버튼
+        increaseBtn.addEventListener('click', function() {
+            count = count + 1;  // count를 1 증가
+            // 또는 간단하게: count++;
+            counter.textContent = count;
+        });
+        
+        // 감소 버튼
+        decreaseBtn.addEventListener('click', function() {
+            count = count - 1;  // count를 1 감소
+            counter.textContent = count;
+        });
+        
+        // 리셋 버튼
+        resetBtn.addEventListener('click', function() {
+            count = 0;  // count를 0으로
+            counter.textContent = count;
+        });
+
+        // ========================================
+        // 실습 3: 이름 입력받기
+        // ========================================
+        
+        const nameInput = document.getElementById('nameInput');
+        const greetBtn = document.getElementById('greetBtn');
+        const result3 = document.getElementById('result3');
+        
+        greetBtn.addEventListener('click', function() {
+            // input에 입력된 값 가져오기
+            const userName = nameInput.value;
+            
+            // 문자열 합치기
+            result3.textContent = '안녕하세요, ' + userName + '님! 🎉';
+        });
+
+        // ========================================
+        // 실습 4: 조건문 (if-else)
+        // ========================================
+        
+        const numberInput = document.getElementById('numberInput');
+        const checkBtn = document.getElementById('checkBtn');
+        const result4 = document.getElementById('result4');
+        
+        checkBtn.addEventListener('click', function() {
+            // 입력된 숫자 가져오기
+            const num = numberInput.value;
+            
+            // 조건문: 짝수인지 홀수인지 확인
+            if (num % 2 === 0) {
+                // 2로 나눈 나머지가 0이면 짝수
+                result4.textContent = num + '은(는) 짝수입니다! ✌️';
+            } else {
+                // 그게 아니면 홀수
+                result4.textContent = num + '은(는) 홀수입니다! ☝️';
+            }
+        });
+
+        // ========================================
+        // 실습 5: 랜덤 이모지
+        // ========================================
+        
+        const emojiDisplay = document.getElementById('emojiDisplay');
+        const emojiBtn = document.getElementById('emojiBtn');
+        
+        // 배열: 여러 데이터를 담는 목록
+        const emojis = ['😊', '🎉', '🚀', '💖', '⭐', '🔥', '🎨', '🎵', '🌈', '✨'];
+        
+        emojiBtn.addEventListener('click', function() {
+            // 0부터 9까지 랜덤 숫자 만들기
+            const randomIndex = Math.floor(Math.random() * emojis.length);
+            
+            // 배열에서 랜덤 이모지 꺼내기
+            const randomEmoji = emojis[randomIndex];
+            
+            // 화면에 표시
+            emojiDisplay.textContent = randomEmoji;
+        });
+    </script>
+</body>
+</html>
