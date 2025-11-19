@@ -1,4 +1,5 @@
 // 0. 구글 시트 CSV URL
+// 웹에 게시 → CSV 형식으로 얻은 URL을 아래에 그대로 넣으시면 됩니다.
 const SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQunOubW2LxKOTkmbx5hpR--bd7ARjT49y4dTDhjtPT1etuTVpi6xTVvFYd98-p9uaeyvUfU9GVBCQB/pub?output=csv";
 
@@ -10,6 +11,7 @@ const gradeSelect = document.getElementById("grade-select");
 const unitSelect = document.getElementById("unit-select");
 const searchInput = document.getElementById("search-input");
 const wordListEl = document.getElementById("word-list");
+const shuffleButton = document.getElementById("shuffle-button");
 
 // 현재 선택 상태
 // grade: "all" 또는 "1" / "2" / "3" (문자열 그대로 유지)
@@ -17,6 +19,22 @@ let currentGrade = gradeSelect.value || "all";
 // unit: "all" 또는 unit 코드 (greeting, school 등)
 let currentUnit = unitSelect.value || "all";
 let currentSearch = "";
+
+// 섞기 버튼에서 강제로 한 번 섞도록 지시하는 플래그
+let forceShuffleOnce = false;
+
+/**
+ * Fisher–Yates Shuffle
+ * 배열을 무작위로 섞은 새 배열을 반환
+ */
+function shuffleArray(array) {
+  const arr = array.slice(); // 원본 보존
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 /**
  * CSV 텍스트를 words 배열로 변환
@@ -108,6 +126,8 @@ function populateUnitSelect() {
 /**
  * 단어 리스트를 화면에 렌더링
  * currentGrade, currentUnit, currentSearch를 기준으로 필터링
+ * - 학년/단원 모두 "전체"일 때 → 새로고침마다 랜덤
+ * - 섞기 버튼 클릭 시 → forceShuffleOnce로 한 번 더 강제 랜덤
  */
 function renderWordList() {
   const filtered = words.filter((item) => {
@@ -128,9 +148,22 @@ function renderWordList() {
     return matchGrade && matchUnit && matchSearch;
   });
 
+  // 전체 학년 + 전체 단원일 때는 항상 섞기
+  // 또는 섞기 버튼으로 강제 섞기 지시가 있을 때 섞기
+  let finalList = filtered;
+  const shouldShuffle =
+    (currentGrade === "all" && currentUnit === "all") || forceShuffleOnce;
+
+  if (shouldShuffle) {
+    finalList = shuffleArray(filtered);
+  }
+
+  // 섞기 버튼 강제 플래그는 한 번 사용 후 초기화
+  forceShuffleOnce = false;
+
   wordListEl.innerHTML = "";
 
-  if (filtered.length === 0) {
+  if (finalList.length === 0) {
     const emptyEl = document.createElement("p");
     emptyEl.textContent = "해당 조건에 맞는 단어가 없습니다.";
     emptyEl.style.fontSize = "14px";
@@ -139,7 +172,7 @@ function renderWordList() {
     return;
   }
 
-  filtered.forEach((item) => {
+  finalList.forEach((item) => {
     const card = document.createElement("article");
     card.className = "word-card";
 
@@ -228,6 +261,12 @@ unitSelect.addEventListener("change", () => {
 
 searchInput.addEventListener("input", () => {
   currentSearch = searchInput.value;
+  renderWordList();
+});
+
+// 🔥 섞기 버튼: 현재 필터 조건 내에서 다시 랜덤 섞기
+shuffleButton.addEventListener("click", () => {
+  forceShuffleOnce = true;
   renderWordList();
 });
 
