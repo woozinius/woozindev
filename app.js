@@ -1,5 +1,4 @@
 // 0. 구글 시트 CSV URL
-// 웹에 게시 → CSV 형식으로 얻은 URL을 아래에 그대로 넣으시면 됩니다.
 const SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQunOubW2LxKOTkmbx5hpR--bd7ARjT49y4dTDhjtPT1etuTVpi6xTVvFYd98-p9uaeyvUfU9GVBCQB/pub?output=csv";
 
@@ -165,10 +164,10 @@ function renderWordList() {
     translations.className = "word-translations";
 
     const zhLine = document.createElement("div");
-    zhLine.textContent = `중국어: ${item.meaningZh || "-"}`;
+    zhLine.textContent = `🇨🇳 ${item.meaningZh || "-"}`;
 
     const ruLine = document.createElement("div");
-    ruLine.textContent = `러시아어: ${item.meaningRu || "-"}`;
+    ruLine.textContent = `🇷🇺 ${item.meaningRu || "-"}`;
 
     translations.appendChild(zhLine);
     translations.appendChild(ruLine);

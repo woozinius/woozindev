@@ -18,11 +18,15 @@ body {
 }
 
 /* 헤더 영역 */
-.site-header {
+.site-header{
   background: linear-gradient(135deg, #4a90e2, #6ec6a8);
   color: #fff;
   padding: 20px 0;
+  text-decoration: none;
 }
+
+.container a {color: #fff;
+text-decoration: none;}
 
 .site-title {
   margin: 0;
